@@ -1,0 +1,25 @@
+parameters:
+- name: paramsJson
+  type: string 
+- name: parameterFilePath
+  type: string
+  default: main.parameters.json
+steps:
+- pwsh: |
+    $obj = '${{ parameters.paramsJson }}' | ConvertFrom-Json -AsHashtable
+    $header = [ordered]@{
+      schema = "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#"
+      contentVersion = "1.0.0.0"
+      parameters = @{}
+    }
+    $valueObject = New-Object -TypeName PsObject
+    foreach ($item in $obj.GetEnumerator())
+    {  
+       $value = @{
+         value = $item.Value
+       }
+       Add-Member -InputObject $valueObject -MemberType NoteProperty -Name $item.Name -Value $value
+    }
+    $header.parameters = $valueObject 
+    Set-Content ${{ parameters.parameterFilePath }} ($header | ConvertTo-Json -Depth 10)
+  displayName: 'Create Parameters file ${{ parameters.parameterFilePath }}'

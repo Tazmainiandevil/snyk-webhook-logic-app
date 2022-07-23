@@ -1,0 +1,15 @@
+parameters:
+- name: tags
+  type: object
+- name: env
+  type: string
+- name: appName
+  type: string
+- name: location
+  type: string
+
+steps:
+- template: create-parameters-file.yml
+  parameters:
+     paramsJson: '${{ convertToJson(parameters) }}'
+     parameterFilePath: './iac/deploy_func.parameters.json'

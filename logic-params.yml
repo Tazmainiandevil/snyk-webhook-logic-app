@@ -1,0 +1,29 @@
+parameters:
+- name: tags
+  type: object
+- name: env
+  type: string
+- name: appName
+  type: string
+- name: location
+  type: string
+- name: projectName
+  type: string
+- name: account
+  type: string
+- name: snykWebhookSecret
+  type: string
+- name: snykOrgId
+  type: string
+- name: snykApiToken
+  type: string
+- name: functionId
+  type: string
+- name: snykSeverity
+  type: string
+
+steps:
+- template: create-parameters-file.yml
+  parameters:
+     paramsJson: '${{ convertToJson(parameters) }}'
+     parameterFilePath: './iac/deploy_logic.parameters.json'
